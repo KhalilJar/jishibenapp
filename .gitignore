@@ -1,0 +1,29 @@
+# Gradle and Android build outputs
+.gradle/
+.gradle-run/
+.gradle-user/
+.gradle-user2/
+.gradle-user3/
+build/
+*/build/
+
+# Local machine config
+local.properties
+.idea/
+*.iml
+
+# Generated APKs and bundles
+*.apk
+*.ap_
+*.aab
+
+# Signing files
+*.jks
+*.keystore
+keystore.properties
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+

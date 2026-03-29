@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">&#35760;&#36134;&#26412;</string>
+
+    <string name="tab_records">&#35760;&#24405;</string>
+    <string name="tab_add">&#28155;&#21152;</string>
+    <string name="tab_stats">&#32479;&#35745;</string>
+    <string name="tab_calendar">&#26085;&#21382;</string>
+
+    <string name="title_record_list">&#35760;&#24405;&#21015;&#34920;</string>
+    <string name="title_add_record">&#26032;&#22686;&#35760;&#24405;</string>
+    <string name="title_daily_stats">&#25353;&#22825;&#32479;&#35745;</string>
+    <string name="title_calendar">&#26085;&#21382;</string>
+    <string name="title_day_detail">&#24403;&#26085;&#26126;&#32454;</string>
+
+    <string name="calendar_prev_month">&#19978;&#20010;&#26376;</string>
+    <string name="calendar_next_month">&#19979;&#20010;&#26376;</string>
+    <string name="calendar_hint">&#26684;&#23376;&#26174;&#31034;&#20928;&#39069;&#65307;&#32511;&#28857;=&#25910;&#20837;&#65292;&#32418;&#28857;=&#25903;&#20986;</string>
+
+    <string name="day_detail_back">&#36820;&#22238;</string>
+    <string name="day_detail_title">&#26126;&#32454;&#65306;%1$s</string>
+    <string name="day_detail_empty">&#24403;&#26085;&#26242;&#26080;&#35760;&#24405;</string>
+    <string name="label_time">&#26102;&#38388;&#65306;%1$s</string>
+    <string name="label_note">&#22791;&#27880;&#65306;%1$s</string>
+
+    <string name="weekday_mon">&#19968;</string>
+    <string name="weekday_tue">&#20108;</string>
+    <string name="weekday_wed">&#19977;</string>
+    <string name="weekday_thu">&#22235;</string>
+    <string name="weekday_fri">&#20116;</string>
+    <string name="weekday_sat">&#20845;</string>
+    <string name="weekday_sun">&#26085;</string>
+</resources>
