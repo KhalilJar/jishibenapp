@@ -70,24 +70,3 @@ settings.gradle.kts   模块声明与仓库配置
 gradlew / gradlew.bat Gradle 启动脚本
 ```
 
-## Git 提交建议
-
-以下内容建议提交到仓库：
-
-- 源代码和资源文件
-- Gradle 配置
-- `gradle/wrapper`
-- `README.md`
-
-以下内容不建议提交：
-
-- `.gradle/`、`.gradle-run/`、`.gradle-user*`
-- `app/build/`
-- `local.properties`
-- `*.apk`
-
-项目已提供 `.gitignore` 来忽略这些本机和构建产物。
-
-## 说明
-
-这个项目适合作为 Android Compose + Room 练手项目，也适合作为个人作品集中的一个基础应用示例。
