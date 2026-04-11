@@ -7,7 +7,12 @@ import com.example.bookkeeping.data.model.RecordType
 
 @Entity(
     tableName = "records",
-    indices = [Index(value = ["timestamp"]), Index(value = ["type"]), Index(value = ["tag"])]
+    indices = [
+        Index(value = ["timestamp"]),
+        Index(value = ["type"]),
+        Index(value = ["tag"]),
+        Index(value = ["accountId"])
+    ]
 )
 data class RecordEntity(
     @PrimaryKey(autoGenerate = true)
@@ -16,5 +21,6 @@ data class RecordEntity(
     val amount: Double,
     val tag: String,
     val note: String?,
-    val timestamp: Long
+    val timestamp: Long,
+    val accountId: Long = 1L
 )

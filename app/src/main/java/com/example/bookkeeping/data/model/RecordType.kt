@@ -1,4 +1,4 @@
-package com.example.bookkeeping.data.model
+﻿package com.example.bookkeeping.data.model
 
 enum class RecordType(val displayName: String) {
     INCOME("收入"),

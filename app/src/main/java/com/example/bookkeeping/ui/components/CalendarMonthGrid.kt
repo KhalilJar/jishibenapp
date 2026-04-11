@@ -23,16 +23,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.bookkeeping.data.model.DailySummary
-import com.example.bookkeeping.ui.util.formatAmount
+import com.example.bookkeeping.ui.util.formatCalendarAmount
 import java.time.LocalDate
 import java.time.YearMonth
-import kotlin.math.abs
 
 @Composable
 fun CalendarMonthGrid(
     yearMonth: YearMonth,
     weekdays: List<String>,
     summaryByDate: Map<LocalDate, DailySummary>,
+    selectedDate: LocalDate,
+    today: LocalDate,
     onDayClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -60,6 +61,8 @@ fun CalendarMonthGrid(
                     CalendarDayCell(
                         date = day,
                         summary = day?.let { summaryByDate[it] },
+                        isSelected = day == selectedDate,
+                        isToday = day == today,
                         onClick = onDayClick,
                         modifier = Modifier.weight(1f)
                     )
@@ -92,15 +95,26 @@ private fun WeekdayHeader(weekdays: List<String>) {
 private fun CalendarDayCell(
     date: LocalDate?,
     summary: DailySummary?,
+    isSelected: Boolean,
+    isToday: Boolean,
     onClick: (LocalDate) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val borderColor = MaterialTheme.colorScheme.outlineVariant
+    val borderColor = when {
+        isSelected -> MaterialTheme.colorScheme.primary
+        isToday -> MaterialTheme.colorScheme.primary.copy(alpha = 0.45f)
+        else -> MaterialTheme.colorScheme.outlineVariant
+    }
+    val containerColor = when {
+        isSelected -> MaterialTheme.colorScheme.primaryContainer
+        isToday -> MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.35f)
+        else -> Color.Transparent
+    }
 
     if (date == null) {
         Box(
             modifier = modifier
-                .height(84.dp)
+                .height(60.dp)
                 .padding(2.dp)
                 .border(width = 1.dp, color = borderColor, shape = MaterialTheme.shapes.small)
         )
@@ -108,34 +122,59 @@ private fun CalendarDayCell(
     }
 
     val netAmount = (summary?.totalIncome ?: 0.0) - (summary?.totalExpense ?: 0.0)
+    val netColor = when {
+        netAmount > 0 -> Color(0xFF2E7D32)
+        netAmount < 0 -> Color(0xFFC62828)
+        else -> MaterialTheme.colorScheme.onSurface
+    }
+    val dateColor = if (isSelected) {
+        MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.75f)
+    } else {
+        MaterialTheme.colorScheme.onSurfaceVariant
+    }
 
     Column(
         modifier = modifier
-            .height(84.dp)
+            .height(60.dp)
             .padding(2.dp)
             .clip(MaterialTheme.shapes.small)
+            .background(containerColor)
             .border(width = 1.dp, color = borderColor, shape = MaterialTheme.shapes.small)
             .clickable { onClick(date) }
             .padding(horizontal = 6.dp, vertical = 4.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(
-            text = date.dayOfMonth.toString(),
-            style = MaterialTheme.typography.bodySmall
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = date.dayOfMonth.toString(),
+                style = MaterialTheme.typography.bodySmall,
+                color = dateColor
+            )
+            if (isToday && !isSelected) {
+                Box(
+                    modifier = Modifier
+                        .size(6.dp)
+                        .clip(MaterialTheme.shapes.small)
+                        .background(MaterialTheme.colorScheme.primary)
+                )
+            } else {
+                Spacer(modifier = Modifier.size(6.dp))
+            }
+        }
 
         if (summary != null) {
-            val netText = if (netAmount >= 0) {
-                "+${formatAmount(netAmount)}"
-            } else {
-                "-${formatAmount(abs(netAmount))}"
-            }
-            val netColor = if (netAmount >= 0) Color(0xFF2E7D32) else Color(0xFFC62828)
-
             Text(
-                text = netText,
+                text = formatCalendarAmount(netAmount),
                 style = MaterialTheme.typography.labelSmall,
-                color = netColor
+                color = if (isSelected && netAmount == 0.0) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else {
+                    netColor
+                }
             )
 
             Row(

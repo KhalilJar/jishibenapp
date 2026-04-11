@@ -4,6 +4,9 @@
 .gradle-user/
 .gradle-user2/
 .gradle-user3/
+.gradle-user4/
+.g4/
+__packaging/
 build/
 */build/
 
@@ -26,4 +29,3 @@ keystore.properties
 *.log
 .DS_Store
 Thumbs.db
-

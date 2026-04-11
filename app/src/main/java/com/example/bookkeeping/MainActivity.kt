@@ -13,7 +13,10 @@ class MainActivity : ComponentActivity() {
 
     private val viewModel: MainViewModel by viewModels {
         val app = application as BookkeepingApplication
-        MainViewModelFactory(app.recordRepository)
+        MainViewModelFactory(
+            repository = app.recordRepository,
+            backupManager = app.backupManager
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

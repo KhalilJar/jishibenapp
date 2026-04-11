@@ -16,6 +16,19 @@
     <string name="calendar_prev_month">&#19978;&#20010;&#26376;</string>
     <string name="calendar_next_month">&#19979;&#20010;&#26376;</string>
     <string name="calendar_hint">&#26684;&#23376;&#26174;&#31034;&#20928;&#39069;&#65307;&#32511;&#28857;=&#25910;&#20837;&#65292;&#32418;&#28857;=&#25903;&#20986;</string>
+    <string name="calendar_account_label">&#36134;&#25143;&#65306;%1$s</string>
+    <string name="calendar_all_accounts">&#20840;&#37096;&#36134;&#25143;</string>
+    <string name="calendar_switch_account">&#20999;&#25442;&#36134;&#25143;</string>
+    <string name="calendar_jump_hint">&#28857;&#20013;&#38388;&#24180;&#26376;&#21487;&#24555;&#36895;&#36339;&#36716;&#65292;&#19981;&#29992;&#20877;&#19968;&#26376;&#19968;&#26376;&#24930;&#24930;&#28857;&#12290;</string>
+    <string name="calendar_month_summary">&#26412;&#26376;&#27719;&#24635;</string>
+    <string name="calendar_year_summary">&#26412;&#24180;&#27719;&#24635;</string>
+    <string name="calendar_detail_title">&#24403;&#26085;&#35814;&#24773;</string>
+    <string name="calendar_view_day_details">&#26597;&#30475;&#20840;&#37096;</string>
+    <string name="calendar_income_total">&#25910;&#20837;</string>
+    <string name="calendar_expense_total">&#25903;&#20986;</string>
+    <string name="calendar_net_total">&#20928;&#39069;</string>
+    <string name="calendar_day_records_title">&#24403;&#22825;&#20132;&#26131;</string>
+    <string name="calendar_day_records_empty">&#24403;&#22825;&#26242;&#26080;&#35760;&#24405;</string>
 
     <string name="day_detail_back">&#36820;&#22238;</string>
     <string name="day_detail_title">&#26126;&#32454;&#65306;%1$s</string>

@@ -16,6 +16,9 @@ interface RecordDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRecord(record: RecordEntity): Long
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRecords(records: List<RecordEntity>)
+
     @Update
     suspend fun updateRecord(record: RecordEntity)
 
@@ -27,6 +30,9 @@ interface RecordDao {
 
     @Query("SELECT * FROM records ORDER BY timestamp DESC")
     fun observeAllRecords(): Flow<List<RecordEntity>>
+
+    @Query("SELECT * FROM records ORDER BY timestamp DESC")
+    suspend fun getAllRecords(): List<RecordEntity>
 
     @Query(
         """
@@ -69,4 +75,7 @@ interface RecordDao {
         startMillis: Long,
         endMillis: Long
     ): Flow<List<DailySummaryEntity>>
+
+    @Query("DELETE FROM records")
+    suspend fun clearRecords()
 }

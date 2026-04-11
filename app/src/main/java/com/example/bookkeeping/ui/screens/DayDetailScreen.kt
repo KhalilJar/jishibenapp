@@ -1,5 +1,6 @@
 ﻿package com.example.bookkeeping.ui.screens
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -38,8 +39,10 @@ private val detailDayFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern(
 fun DayDetailScreen(
     dayStartMillis: Long,
     records: List<Record>,
+    accountNameForRecord: (Long) -> String,
     contentPadding: PaddingValues,
     onBackClick: () -> Unit,
+    onRecordClick: (Record) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val dayLabel = Instant.ofEpochMilli(dayStartMillis)
@@ -89,46 +92,35 @@ fun DayDetailScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(records, key = { it.id }) { record ->
-                DayRecordCard(record = record)
-            }
-        }
-    }
-}
-
-@Composable
-private fun DayRecordCard(record: Record) {
-    val amountColor = if (record.type == RecordType.INCOME) {
-        Color(0xFF2E7D32)
-    } else {
-        Color(0xFFC62828)
-    }
-    val amountPrefix = if (record.type == RecordType.INCOME) "+" else "-"
-
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "${record.type.displayName} · ${record.tag}")
-                Text(
-                    text = "$amountPrefix${formatAmount(record.amount)}",
-                    color = amountColor
-                )
-            }
-            Text(text = stringResource(R.string.label_time, formatDateTime(record.timestamp)))
-            if (!record.note.isNullOrBlank()) {
-                Text(text = stringResource(R.string.label_note, record.note.orEmpty()))
+                val amountColor = if (record.type == RecordType.INCOME) Color(0xFF2E7D32) else Color(0xFFC62828)
+                val amountPrefix = if (record.type == RecordType.INCOME) "+" else "-"
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onRecordClick(record) },
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = "${record.type.displayName} · ${record.tag}")
+                            Text(text = "$amountPrefix${formatAmount(record.amount)}", color = amountColor)
+                        }
+                        Text(text = "账户：${accountNameForRecord(record.accountId)}")
+                        Text(text = stringResource(R.string.label_time, formatDateTime(record.timestamp)))
+                        if (!record.note.isNullOrBlank()) {
+                            Text(text = stringResource(R.string.label_note, record.note.orEmpty()))
+                        }
+                    }
+                }
             }
         }
     }

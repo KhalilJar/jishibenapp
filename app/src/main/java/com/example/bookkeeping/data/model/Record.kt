@@ -6,5 +6,6 @@ data class Record(
     val amount: Double,
     val tag: String,
     val note: String?,
-    val timestamp: Long
+    val timestamp: Long,
+    val accountId: Long = 1L
 )
