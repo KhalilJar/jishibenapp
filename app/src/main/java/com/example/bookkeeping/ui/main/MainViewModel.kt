@@ -111,13 +111,14 @@ class MainViewModel(
     private val _addRecordState = MutableStateFlow(AddRecordUiState())
     val addRecordState: StateFlow<AddRecordUiState> = _addRecordState.asStateFlow()
 
-    val addRecordTags: StateFlow<List<String>> = _addRecordState
-        .map { state -> TagDataSource.tagsFor(state.type) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = TagDataSource.tagsFor(RecordType.EXPENSE)
-        )
+    private val _addRecordTags = MutableStateFlow(TagDataSource.tagsFor(RecordType.EXPENSE))
+    val addRecordTags: StateFlow<List<String>> = _addRecordTags.asStateFlow()
+
+    private val _tagManagementExpenseTags = MutableStateFlow(TagDataSource.expenseTags())
+    val tagManagementExpenseTags: StateFlow<List<String>> = _tagManagementExpenseTags.asStateFlow()
+
+    private val _tagManagementIncomeTags = MutableStateFlow(TagDataSource.incomeTags())
+    val tagManagementIncomeTags: StateFlow<List<String>> = _tagManagementIncomeTags.asStateFlow()
 
     private val _statsPeriod = MutableStateFlow(StatsPeriod.MONTH)
     private val _statsRecordType = MutableStateFlow(RecordType.EXPENSE)
@@ -379,6 +380,7 @@ class MainViewModel(
             selectedDateMillis = System.currentTimeMillis(),
             selectedAccountId = activeAccounts.value.firstOrNull()?.id ?: 1L
         )
+        _addRecordTags.value = TagDataSource.tagsFor(RecordType.EXPENSE)
     }
 
     fun startEditRecord(record: Record) {
@@ -391,6 +393,7 @@ class MainViewModel(
             selectedDateMillis = record.timestamp,
             selectedAccountId = record.accountId
         )
+        _addRecordTags.value = TagDataSource.tagsFor(record.type)
     }
 
     fun startRecurringReminderEntry(rule: RecurringRule) {
@@ -403,6 +406,7 @@ class MainViewModel(
             selectedDateMillis = System.currentTimeMillis(),
             selectedAccountId = rule.accountId
         )
+        _addRecordTags.value = TagDataSource.tagsFor(rule.type)
     }
 
     fun previousMonth() {
@@ -442,6 +446,7 @@ class MainViewModel(
             selectedTag = nextTag,
             errorMessage = null
         )
+        _addRecordTags.value = TagDataSource.tagsFor(type)
     }
 
     fun onAmountChanged(amount: String) {
@@ -699,6 +704,24 @@ class MainViewModel(
         _dataManagementUiState.value = DataManagementUiState()
     }
 
+    // ?? tag management ?????????????????????????????????????
+
+    fun addCustomTag(type: RecordType, tag: String) {
+        TagDataSource.addTag(type, tag)
+        refreshAllTagFlows()
+    }
+
+    fun removeCustomTag(type: RecordType, tag: String) {
+        TagDataSource.removeTag(type, tag)
+        refreshAllTagFlows()
+    }
+
+    private fun refreshAllTagFlows() {
+        _addRecordTags.value = TagDataSource.tagsFor(_addRecordState.value.type)
+        _tagManagementExpenseTags.value = TagDataSource.expenseTags()
+        _tagManagementIncomeTags.value = TagDataSource.incomeTags()
+    }
+
     fun defaultBudgetMonth(): String = YearMonth.now(zoneId).format(backupMonthFormatter)
 
     fun todayDateString(): String = today.format(backupDayFormatter)
@@ -745,9 +768,9 @@ class MainViewModel(
 
     private fun availableTagsForFilters(type: RecordType?): List<String> {
         return when (type) {
-            RecordType.EXPENSE -> TagDataSource.expenseTags
-            RecordType.INCOME -> TagDataSource.incomeTags
-            null -> (TagDataSource.expenseTags + TagDataSource.incomeTags).distinct()
+            RecordType.EXPENSE -> TagDataSource.expenseTags()
+            RecordType.INCOME -> TagDataSource.incomeTags()
+            null -> (TagDataSource.expenseTags() + TagDataSource.incomeTags()).distinct()
         }
     }
 

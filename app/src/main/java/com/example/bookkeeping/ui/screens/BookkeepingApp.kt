@@ -55,6 +55,7 @@ private object AppRoute {
     const val BUDGETS = "budgets"
     const val RECURRING = "recurring"
     const val DATA = "data"
+    const val TAGS = "tags"
 
     fun dayRoute(dayStartMillis: Long): String = "calendar/day/$dayStartMillis"
 }
@@ -79,6 +80,8 @@ fun BookkeepingApp(
     val recordListUiState by viewModel.recordListUiState.collectAsStateWithLifecycle()
     val statsUiState by viewModel.statsUiState.collectAsStateWithLifecycle()
     val calendarUiState by viewModel.calendarUiState.collectAsStateWithLifecycle()
+    val tagManagementExpenseTags by viewModel.tagManagementExpenseTags.collectAsStateWithLifecycle()
+    val tagManagementIncomeTags by viewModel.tagManagementIncomeTags.collectAsStateWithLifecycle()
     val dataManagementUiState by viewModel.dataManagementUiState.collectAsStateWithLifecycle()
 
     var menuExpanded by remember { mutableStateOf(false) }
@@ -92,6 +95,7 @@ fun BookkeepingApp(
         currentRoute == AppRoute.ACCOUNTS -> "账户管理"
         currentRoute == AppRoute.BUDGETS -> "预算管理"
         currentRoute == AppRoute.RECURRING -> "固定收支"
+        currentRoute == AppRoute.TAGS -> "标签管理"
         currentRoute == AppRoute.DATA -> "数据管理"
         else -> stringResource(R.string.app_name)
     }
@@ -124,6 +128,10 @@ fun BookkeepingApp(
                             DropdownMenuItem(text = { Text("固定收支") }, onClick = {
                                 menuExpanded = false
                                 navController.navigate(AppRoute.RECURRING)
+                            })
+                            DropdownMenuItem(text = { Text("标签管理") }, onClick = {
+                                menuExpanded = false
+                                navController.navigate(AppRoute.TAGS)
                             })
                             DropdownMenuItem(text = { Text("数据管理") }, onClick = {
                                 menuExpanded = false
@@ -341,6 +349,16 @@ fun BookkeepingApp(
                 )
             }
 
+            composable(AppRoute.TAGS) {
+                TagManagementScreen(
+                    expenseTags = tagManagementExpenseTags,
+                    incomeTags = tagManagementIncomeTags,
+                    contentPadding = innerPadding,
+                    onAddTag = viewModel::addCustomTag,
+                    onRemoveTag = viewModel::removeCustomTag
+                )
+            }
+
             composable(AppRoute.DATA) {
                 DataManagementScreen(
                     state = dataManagementUiState,
@@ -353,3 +371,4 @@ fun BookkeepingApp(
         }
     }
 }
+

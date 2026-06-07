@@ -1,7 +1,8 @@
-package com.example.bookkeeping
+﻿package com.example.bookkeeping
 
 import android.app.Application
 import androidx.room.Room
+import com.example.bookkeeping.data.TagDataSource
 import com.example.bookkeeping.data.local.AppDatabase
 import com.example.bookkeeping.data.backup.BackupManager
 import com.example.bookkeeping.data.repository.DefaultRecordRepository
@@ -31,5 +32,10 @@ class BookkeepingApplication : Application() {
 
     val backupManager: BackupManager by lazy {
         BackupManager(applicationContext)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        TagDataSource.init(applicationContext)
     }
 }
