@@ -1,6 +1,7 @@
 ﻿package com.example.bookkeeping.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.example.bookkeeping.data.model.RecordType
 
 object TagDataSource {
@@ -45,7 +46,7 @@ object TagDataSource {
         if (isValidTag(type, trimmed)) return
 
         val key = prefsKey(type)
-        val current = prefs.getStringSet(key, emptySet())?.toMutableSet() ?: mutableSetOf()
+        val current = prefs.getStringSet(key, emptySet<String>())?.toMutableSet() ?: mutableSetOf()
         current.add(trimmed)
         prefs.edit().putStringSet(key, current).apply()
     }
@@ -53,20 +54,22 @@ object TagDataSource {
     fun removeTag(type: RecordType, tag: String) {
         val trimmed = tag.trim()
         val key = prefsKey(type)
-        val current = prefs.getStringSet(key, emptySet())?.toMutableSet() ?: mutableSetOf()
+        val current = prefs.getStringSet(key, emptySet<String>())?.toMutableSet() ?: mutableSetOf()
         if (current.remove(trimmed)) {
             prefs.edit().putStringSet(key, current).apply()
         }
     }
 
     private fun customExpenseTags(): Set<String> =
-        prefs.getStringSet(KEY_EXPENSE_CUSTOM, emptySet()) ?: emptySet()
+        prefs.getStringSet(KEY_EXPENSE_CUSTOM, emptySet<String>()) ?: emptySet<String>()
 
     private fun customIncomeTags(): Set<String> =
-        prefs.getStringSet(KEY_INCOME_CUSTOM, emptySet()) ?: emptySet()
+        prefs.getStringSet(KEY_INCOME_CUSTOM, emptySet<String>()) ?: emptySet<String>()
 
     private fun prefsKey(type: RecordType) = when (type) {
         RecordType.EXPENSE -> KEY_EXPENSE_CUSTOM
         RecordType.INCOME  -> KEY_INCOME_CUSTOM
     }
 }
+
+

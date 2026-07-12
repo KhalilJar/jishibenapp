@@ -56,7 +56,7 @@ fun RecurringManagementScreen(
     var title by remember { mutableStateOf("") }
     var type by remember { mutableStateOf(RecordType.EXPENSE) }
     var amountInput by remember { mutableStateOf("") }
-    var tag by remember { mutableStateOf(TagDataSource.expenseTags.first()) }
+    var tag by remember { mutableStateOf(TagDataSource.expenseTags().first()) }
     var note by remember { mutableStateOf("") }
     var accountId by remember { mutableStateOf(accounts.firstOrNull()?.id ?: 1L) }
     var frequency by remember { mutableStateOf(RecurringFrequency.MONTHLY) }
@@ -87,11 +87,11 @@ fun RecurringManagementScreen(
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         FilterChip(selected = type == RecordType.EXPENSE, onClick = {
                             type = RecordType.EXPENSE
-                            tag = TagDataSource.expenseTags.first()
+                            tag = TagDataSource.expenseTags().first()
                         }, label = { Text("支出") })
                         FilterChip(selected = type == RecordType.INCOME, onClick = {
                             type = RecordType.INCOME
-                            tag = TagDataSource.incomeTags.first()
+                            tag = TagDataSource.incomeTags().first()
                         }, label = { Text("收入") })
                     }
                     OutlinedTextField(
@@ -233,3 +233,4 @@ fun RecurringManagementScreen(
         }
     }
 }
+

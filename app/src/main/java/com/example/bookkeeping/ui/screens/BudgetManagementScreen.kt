@@ -62,14 +62,14 @@ fun BudgetManagementScreen(
     var showDialog by remember { mutableStateOf(false) }
     var amountInput by remember { mutableStateOf("") }
     var selectedScope by remember { mutableStateOf(BudgetScope.TOTAL) }
-    var selectedTag by remember { mutableStateOf(TagDataSource.expenseTags.first()) }
+    var selectedTag by remember { mutableStateOf(TagDataSource.expenseTags().first()) }
     var tagExpanded by remember { mutableStateOf(false) }
 
     fun openDialog(budget: Budget?) {
         editingBudget = budget
         amountInput = budget?.amountLimit?.toString().orEmpty()
         selectedScope = budget?.scope ?: BudgetScope.TOTAL
-        selectedTag = budget?.tag ?: TagDataSource.expenseTags.first()
+        selectedTag = budget?.tag ?: TagDataSource.expenseTags().first()
         showDialog = true
     }
 
@@ -106,7 +106,7 @@ fun BudgetManagementScreen(
                                 modifier = Modifier.menuAnchor().fillMaxWidth()
                             )
                             DropdownMenu(expanded = tagExpanded, onDismissRequest = { tagExpanded = false }) {
-                                TagDataSource.expenseTags.forEach { tag ->
+                                TagDataSource.expenseTags().forEach { tag ->
                                     DropdownMenuItem(text = { Text(tag) }, onClick = {
                                         selectedTag = tag
                                         tagExpanded = false
@@ -202,3 +202,4 @@ fun BudgetManagementScreen(
         }
     }
 }
+
