@@ -1,5 +1,6 @@
 package com.example.bookkeeping.server;
 
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,6 +11,7 @@ public class BookkeepingServerApplication {
 
         SpringApplication.run(BookkeepingServerApplication.class, args);
         System.out.println("hello world");
+        System.out.println("bye bye");
     }
 
 }

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.example.bookkeeping"
-version = "0.0.1-SNAPSHOT"
+version = "1.0.0-SNAPSHOT"
 description = "server"
 
 java {
@@ -30,6 +30,8 @@ dependencies {
     testCompileOnly("org.projectlombok:lombok")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testAnnotationProcessor("org.projectlombok:lombok")
+    // 添加 MySQL 驱动（运行时依赖）
+    runtimeOnly("com.mysql:mysql-connector-j")
 }
 
 tasks.withType<Test> {
