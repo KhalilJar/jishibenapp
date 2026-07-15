@@ -32,6 +32,11 @@ dependencies {
     testAnnotationProcessor("org.projectlombok:lombok")
     // 添加 MySQL 驱动（运行时依赖）
     runtimeOnly("com.mysql:mysql-connector-j")
+    // 用于JSON序列化
+    implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+
 }
 
 tasks.withType<Test> {

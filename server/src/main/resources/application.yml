@@ -32,6 +32,6 @@ spring:
 
 # JWT 自定义配置
 jwt:
-  secret: "自己的密钥，实际部署一定要换成足够长的随机字符串"
+  secret: "KoRede_MuDeki_No_BuRu_aizu_howaito_doragonn"
   access-token-expiration: 1800000
   refresh-token-expiration: 604800000

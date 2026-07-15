@@ -1,2 +1,19 @@
-package com.example.bookkeeping.server.config;public class SecurityConfig {
+package com.example.bookkeeping.server.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Configuration
+public class SecurityConfig {
+    /**
+     * 把BCryptPasswordEncoder  注册为一个Bean
+     *  “@Bean"的含义：
+     * @return
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
