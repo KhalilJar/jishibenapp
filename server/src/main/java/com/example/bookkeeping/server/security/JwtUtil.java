@@ -1,8 +1,11 @@
 package com.example.bookkeeping.server.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JwtUtil {
     // @Value 注解： 从 application.yml 里读取配置注入到这里
     @Value("${jwt.secret}")
@@ -76,10 +80,40 @@ public class JwtUtil {
     /**
      * 从 Token中获取用户ID
      */
-//    public Long getUserIdFromToken(String token) {
-//        String subject = extractAllClaims(token)
-//    }
+    public Long getUserIdFromToken(String token) {
+        String subject = extractAllClaims(token) // 对token 做校验，验签 + 过期
+                .getSubject();              // subject 已指明返回类型
+        return Long.parseLong(subject);  // 把String 强转为 Long
+    }
 
+    /**
+     * 从 Token 中获取 用户名
+     */
+    public String getUsernameFromToken(String token) {
+        return extractAllClaims(token).get("username", String.class);
+    }
+
+    /**
+     * 校验 Token 是否合法 （签名是否准确，是否过期）
+     *
+     * @return true 表示 有效， false 无效
+     */
+    public boolean validate(String token) {
+        try {
+            extractAllClaims(token);
+            return true;
+        } catch (ExpiredJwtException e) {
+            // 不是 非法篡改， 只是时间到了
+//            System.err.println();   // spring boot 中不推荐这么写，一般都是配合
+            log.error("JWT 已过期：" + e.getMessage());
+            return  false;
+        } catch (JwtException e) {
+            // 签名不对  ，   格式错误等等
+//            System.err.println();   // spring boot 中不推荐这么写，一般都是配合
+            log.error("JWT 无效：" + e.getMessage());
+            return  false;
+        }
+    }
 
 
 
