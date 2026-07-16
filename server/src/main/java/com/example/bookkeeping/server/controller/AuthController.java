@@ -7,10 +7,7 @@ import com.example.bookkeeping.server.dto.TokenResponse;
 import com.example.bookkeeping.server.security.JwtUtil;
 import com.example.bookkeeping.server.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -50,7 +47,7 @@ public class AuthController {
      *
      * 返回 accessToken 和 refreshToken
      */
-    @PostMapping("login")
+    @PostMapping("/login")
     public ApiResponse<TokenResponse> login(@RequestBody LoginRequest loginRequest) {
         String[] tokens = authService.login(loginRequest.getUsername(), loginRequest.getPassword());
         String accessToken = tokens[0];
@@ -70,7 +67,7 @@ public class AuthController {
      *
      * 注意：这里直接用 Map 接收，因为 refreshToken 不是 LoginRequest 的字段
      */
-    @PostMapping("refresh")
+    @PostMapping("/refresh")
     public ApiResponse<TokenResponse> refreshToken(@RequestBody Map<String, String> body) {
         String refreshToken = body.get("refreshToken");
         String[] tokens = authService.refreshToken(refreshToken);

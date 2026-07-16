@@ -30,7 +30,7 @@ public class TokenResponse {
                 .refreshToken(refreshToken)
                 .tokenType("Bearer")
                 .expiresIn(expiresIn)
-                .refreshToken(refreshToken)
+                .refreshExpiresIn(refreshExpiresIn)
                 .build();
     }
     /**
