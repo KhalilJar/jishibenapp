@@ -32,6 +32,6 @@ spring:
 
 # JWT 自定义配置
 jwt:
-  secret: "KoRede_MuDeki_No_BuRu_aizu_howaito_doragonn"
+  secret: ${JWT_SECRET}
   access-token-expiration: 1800000
   refresh-token-expiration: 604800000

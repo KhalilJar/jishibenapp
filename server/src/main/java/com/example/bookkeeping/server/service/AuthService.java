@@ -13,6 +13,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    // 依旧 和 @RequiredArgsConstructor 打配合，省掉三个 @Autowired
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
@@ -48,17 +49,62 @@ public class AuthService {
      * @return TokenResponse 包含 accessToken 和 refreshToken
      */
     // String 为 String[]
-    public String login(String username, String rawPassword) {
+    public String[] login(String username, String rawPassword) {
         // 1.根据用户名找用户，没找到就抛出异常
-        User user = userRepository.findByUserName(username).orElseThrow(() -> new RuntimeException("用户名或者密码出错"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("用户名或者密码出错"));
 
         // 2.用salt + 明文密码 做 BCrypt 比对
-        return "";
+        String saltedPassword = rawPassword + user.getSalt();
+        if (!passwordEncoder.matches(saltedPassword, user.getPasswordHash())) {
+            throw new RuntimeException("用户名或者密码错误");
+        }
+
+        // 3.比对成功，生成JWT
+        String accessToken = jwtUtil.generateAccessToken(user.getId(), user.getUsername());
+        String refreshToken = jwtUtil.generateRefreshToken(user.getId(), user.getUsername());
+
+        return new String[]{accessToken, refreshToken};
     }
 
     /**
      * 刷新 Token
-     * 用户用旧的 refreshToken 换新的 accessToken + refreshToken
+     * 用户 用旧的 refreshToken 换新的 accessToken + refreshToken
      */
+    public String[] refreshToken(String refreshToken) {
+        // 1.先校验 refreshToken 是否合法或者过期
+        if (!jwtUtil.validate(refreshToken)) {
+            throw new RuntimeException("请重新登录，bb"); // 原来sb 湖科大app是设置了refreshToken 双token机制
+            // sb学校，设置得那么短
+        }
 
+        // 2.从token 中获取用户信息
+        Long userId = jwtUtil.getUserIdFromToken(refreshToken);
+        String username = jwtUtil.getUsernameFromToken(refreshToken);
+
+        // 3.重新签发 一对 token
+        String newAccessToken = jwtUtil.generateAccessToken(userId, username);
+        String newRefreshToken = jwtUtil.generateRefreshToken(userId, username);
+
+        return new String[]{newAccessToken, newRefreshToken};
+
+    }
 }
+
+/**
+ * BCrypt 自带盐值
+ * 方案 A（推荐，删除 salt 字段）：既然用了 BCrypt，彻底删掉 User 实体里的 salt 字段，直接用 BCrypt 自带的盐。
+ * public void register(String username, String rawPassword) {
+ *     if (userRepository.existsByUsername(username)) {
+ *         throw new RuntimeException("用户名已被注册");
+ *     }
+ *     // 直接加密，BCrypt 内部自动生成盐并拼进结果
+ *     String passwordHash = passwordEncoder.encode(rawPassword);
+ *
+ *     User user = User.builder()
+ *             .username(username)
+ *             .passwordHash(passwordHash)
+ *             // .salt(salt)  // 这一行删掉！
+ *             .build();
+ *     userRepository.save(user);
+ * }
+ */

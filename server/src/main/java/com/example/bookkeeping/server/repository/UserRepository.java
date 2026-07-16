@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository {
+public interface UserRepository extends JpaRepository<User, Long> {
     // 根据用户名查找用户
     // JPA 根据方法名 自动生成SQL：
     // SELECT * FORM users WHERE username = ？
-    Optional<User> findByUserName(String username);
+    Optional<User> findByUsername(String username);
 
     // 判断用户名是否存在
     // 自动生成 SQL

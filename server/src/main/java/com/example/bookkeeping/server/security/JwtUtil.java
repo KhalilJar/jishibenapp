@@ -51,7 +51,7 @@ public class JwtUtil {
     }
 
     /**
-     *
+     *生成 RefreshToken
      */
     public String generateRefreshToken(Long userId, String username ) {
         Date now = new Date();
