@@ -9,6 +9,7 @@
 __packaging/
 build/
 */build/
+server_md/
 
 # Local machine config
 local.properties
