@@ -21,10 +21,20 @@ public class JwtUtil {
     private String secret;
 
     @Value("${jwt.access-token-expiration}")
-    private long accessTokenExpiration;
+    private long accessTokenExpiration;  //毫秒
 
     @Value("${jwt.refresh-token-expiration}")
-    private long refreshTokenExpiration;
+    private long refreshTokenExpiration;  //毫秒
+
+    // 新增：获取AccessToken 的有效秒数 （供前端使用）
+    public long getAccessTokenExpiration() {
+        return accessTokenExpiration / 1000;   // 单位： 秒
+    }
+
+    //  新增：获取RefreshToken 的有效秒数 （供前端使用）
+    public long getRefreshTokenExpiration() {
+        return refreshTokenExpiration / 1000;  // 单位： 秒
+    }
 
     /**
      * 把配置文件里的 secret 转成 加密算法所需的 SecretKey 对象

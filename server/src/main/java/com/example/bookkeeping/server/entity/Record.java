@@ -21,7 +21,7 @@ public class Record {
     private Long id;
 
     @Column(name = "user_id", nullable = false)
-    private String userId;
+    private Long userId;
 
     @Column(name = "type", nullable = false, length = 10)
     private String type;
@@ -39,7 +39,7 @@ public class Record {
     private Long timestamp;
 
     @Column(name = "account_id")
-    private String accountId;
+    private Long accountId;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
