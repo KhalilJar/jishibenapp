@@ -115,12 +115,12 @@ public class JwtUtil {
         } catch (ExpiredJwtException e) {
             // 不是 非法篡改， 只是时间到了
 //            System.err.println();   // spring boot 中不推荐这么写，一般都是配合
-            log.error("JWT 已过期：" + e.getMessage());
+            log.error("JWT 已过期：" + e);
             return  false;
         } catch (JwtException e) {
             // 签名不对  ，   格式错误等等
 //            System.err.println();   // spring boot 中不推荐这么写，一般都是配合
-            log.error("JWT 无效：" + e.getMessage());
+            log.error("JWT 无效：" + e);
             return  false;
         }
     }

@@ -1,6 +1,8 @@
 package com.example.bookkeeping.server.service;
 
 import com.example.bookkeeping.server.entity.User;
+import com.example.bookkeeping.server.exception.BusinessException;
+import com.example.bookkeeping.server.exception.UnauthorizedException;
 import com.example.bookkeeping.server.repository.UserRepository;
 import com.example.bookkeeping.server.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +28,7 @@ public class AuthService {
     public void register(String username, String rawPassword) {
         // 1.检查用户名是否存在
         if  (userRepository.existsByUsername(username)) {
-            throw new RuntimeException("用户名已被注册");
+            throw new BusinessException("用户名已被注册");
         }
 
         // 2.使用UUID生成唯一盐值
@@ -51,7 +53,7 @@ public class AuthService {
     // String 为 String[]
     public String[] login(String username, String rawPassword) {
         // 1.根据用户名找用户，没找到就抛出异常
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("用户名或者密码出错"));
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new BusinessException("用户名或者密码出错"));
 
         // 2.用salt + 明文密码 做 BCrypt 比对
         String saltedPassword = rawPassword + user.getSalt();
@@ -73,7 +75,7 @@ public class AuthService {
     public String[] refreshToken(String refreshToken) {
         // 1.先校验 refreshToken 是否合法或者过期
         if (!jwtUtil.validate(refreshToken)) {
-            throw new RuntimeException("请重新登录，bb"); // 原来sb 湖科大app是设置了refreshToken 双token机制
+            throw new UnauthorizedException("请重新登录，bb"); // 原来sb 湖科大app是设置了refreshToken 双token机制
             // sb学校，设置得那么短
         }
 
