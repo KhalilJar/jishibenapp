@@ -58,7 +58,7 @@ public class AuthService {
         // 2.用salt + 明文密码 做 BCrypt 比对
         String saltedPassword = rawPassword + user.getSalt();
         if (!passwordEncoder.matches(saltedPassword, user.getPasswordHash())) {
-            throw new RuntimeException("用户名或者密码错误");
+            throw new BusinessException("用户名或者密码错误");
         }
 
         // 3.比对成功，生成JWT

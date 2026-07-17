@@ -30,3 +30,6 @@ keystore.properties
 *.log
 .DS_Store
 Thumbs.db
+
+# my file
+02_REDIS_AND_DEPLOY.md
