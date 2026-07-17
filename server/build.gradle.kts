@@ -22,6 +22,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")  //Spring 官方 Redis 操作 starter，封装了 Lettuce 客户端
+    implementation("org.apache.commons:commons-pool2") //连接池，多个请求共用连接，避免频繁新建 TCP 连接
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("com.h2database:h2")
     annotationProcessor("org.projectlombok:lombok")
