@@ -43,13 +43,13 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/refresh").permitAll()
-//                        .requestMatchers("/h2-console/**").permitAll()  // H2 数据库控制台
+                        .requestMatchers("/h2-console/**").permitAll()  // H2 数据库控制台
                         .requestMatchers("/error").permitAll()           // Spring 默认错误页
 
                         // 其他所有接口都需要认证（头里必须带合法的 JWT Token）
                         .anyRequest().authenticated())
                 // 允许 H2 控制台使用 iframe（默认被 Spring Security 阻止）
-//                .headers(header -> headers.frameOptions(frame -> frame.sameOrigin()))
+                .headers(header -> header.frameOptions(frame -> frame.sameOrigin()))
                 // 把我们写的 JWT 过滤器插入到 Spring Security 过滤器链中
                 // 位置：在 UsernamePasswordAuthenticationFilter 之前执行
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

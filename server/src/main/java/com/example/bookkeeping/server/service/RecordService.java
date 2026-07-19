@@ -2,7 +2,8 @@ package com.example.bookkeeping.server.service;
 
 import com.example.bookkeeping.server.entity.Record;
 import com.example.bookkeeping.server.repository.RecordRepository;
-import com.example.bookkeeping.server.repository.RecordRepository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,4 +73,46 @@ public class RecordService {
         recordRepository.deleteByIdAndUserId(recordId, userId);
     }
 
+    /**
+     * 批量同步记录（带去重）
+     * 客户端首次登录或离线恢复时调用
+     */
+    @Transactional
+    public SyncResult batchSync(Long userId, List<Record> records) {
+        int inserted = 0;
+        int skipped = 0;
+
+        for (Record record : records) {
+            // 检查是否已存在（去重）
+            long count = recordRepository.countDuplicate(
+                userId,
+                record.getTimestamp(),
+                record.getType(),
+                record.getAmount(),
+                record.getTag(),
+                record.getNote(),
+                record.getAccountId()
+            );
+
+            if (count > 0) {
+                skipped++;
+                continue;
+            }
+
+            // 不存在则插入
+            record.setId(null);
+            record.setUserId(userId);
+            recordRepository.save(record);
+            inserted++;
+        }
+
+        return new SyncResult(inserted, skipped);
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class SyncResult {
+        private int inserted;
+        private int skipped;
+    }
 }

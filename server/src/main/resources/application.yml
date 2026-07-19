@@ -5,21 +5,22 @@ spring:
   application:
     name: bookkeeping-server
 
-  datasource:
-    url: jdbc:mysql://localhost:3306/jizhangben?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username:  ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
   # H2 内嵌数据库配置（开发测试用）
+  datasource:
+    url: jdbc:h2:mem:bookkeeping
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  # MySQL 配置（部署时启用）
 #  datasource:
-#    url: jdbc:h2:mem:bookkeeping
-#    driver-class-name: org.h2.Driver
-#    username: sa
-#    password:
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
+#    url: jdbc:mysql://localhost:3306/jizhangben?useSSL=false&serverTimezone=Asia/Shanghai&characterEncoding=utf8&allowPublicKeyRetrieval=true
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username:  ${MYSQL_USERNAME}
+#    password: ${MYSQL_PASSWORD}
 
   # JPA 配置
   jpa:
@@ -32,6 +33,6 @@ spring:
 
 # JWT 自定义配置
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET:dev_secret_key_which_is_at_least_32_characters_long_123456}
   access-token-expiration: 1800000
   refresh-token-expiration: 604800000

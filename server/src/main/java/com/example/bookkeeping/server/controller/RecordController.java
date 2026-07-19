@@ -1,8 +1,9 @@
 package com.example.bookkeeping.server.controller;
 
-import com.example.bookkeeping.server.entity.Record;
 import com.example.bookkeeping.server.dto.ApiResponse;
+import com.example.bookkeeping.server.dto.BatchSyncRequest;
 import com.example.bookkeeping.server.dto.RecordRequest;
+import com.example.bookkeeping.server.entity.Record;
 import com.example.bookkeeping.server.service.RecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -10,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/records")
@@ -104,4 +106,28 @@ public class RecordController {
         return ApiResponse.success();
     }
 
+    /**
+     * 批量同步记账记录（首次同步/离线恢复时调用）
+     * 服务端去重：按 (timestamp + type + amount + tag + note + accountId) 判断
+     * 已存在的跳过，不存在的插入
+     */
+    @PostMapping("/batch")
+    public ApiResponse<RecordService.SyncResult> batchSync(
+            @RequestBody BatchSyncRequest request) {
+        Long userId = getCurrentUserId();
+
+        List<Record> records = request.getRecords().stream()
+            .map(dto -> Record.builder()
+                .type(dto.getType())
+                .amount(dto.getAmount())
+                .tag(dto.getTag())
+                .note(dto.getNote())
+                .timestamp(dto.getTimestamp())
+                .accountId(dto.getAccountId())
+                .build())
+            .collect(Collectors.toList());
+
+        RecordService.SyncResult result = recordService.batchSync(userId, records);
+        return ApiResponse.success(result);
+    }
 }
