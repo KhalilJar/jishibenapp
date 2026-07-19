@@ -22,6 +22,7 @@ public class TokenResponse {
      * @param accessToken
      * @param refreshToken
      * @param expiresIn
+     * @param refreshExpiresIn
      * @return
      */
     public static TokenResponse of(String accessToken, String refreshToken, long expiresIn, long refreshExpiresIn) {

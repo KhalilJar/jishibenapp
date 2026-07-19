@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service
+@Service  //把类 收进ioc，跟 @Autowired  或者 @RequiedArgsConstructor+ final 打配合
 @RequiredArgsConstructor
 public class RecordService {
     private final RecordRepository recordRepository;
