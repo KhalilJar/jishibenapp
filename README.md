@@ -9,7 +9,6 @@
 -   **AI Agent 辅助开发** — 前端代码由 AI Agent 生成，后端由我主导从零搭建，前后端联调中沉淀了人机协作流程
 -   **全栈闭环** — Android 端（Kotlin / Room / SQLite） + 服务端（Spring Boot / JPA / MySQL）
 -   **安全体系** — BCrypt + Salt 加盐加密、JWT 双 Token 鉴权（Access + Refresh）、无状态认证、全局异常处理
--   **知识沉淀** — `server_md/` 目录下 4 篇教学文档（超 4000 行），记录从零搭建全过程
 
 ---
 
