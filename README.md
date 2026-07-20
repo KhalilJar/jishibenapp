@@ -1,72 +1,101 @@
-# BookkeepingApp
+# BookkeepingApp — 全栈记账应用
 
-一个使用 Kotlin + Jetpack Compose 开发的 Android 记账应用示例项目，支持日常收支记录、按天统计和日历查看。
+> **Kotlin + Jetpack Compose** 前端（AI Agent 辅助生成） + **Java Spring Boot** 后端（手动搭建）。覆盖用户认证、JWT 鉴权、API 设计等完整工程实践。
 
-## 功能
+---
 
-- 记录收入和支出
-- 添加分类标签和备注
-- 查看记录列表
-- 查看按天统计结果
-- 在日历中浏览每月数据
-- 点击某一天查看当日明细
+## 项目亮点
+
+-   **AI Agent 辅助开发** — 前端代码由 AI Agent 生成，后端由我主导从零搭建，前后端联调中沉淀了人机协作流程
+-   **全栈闭环** — Android 端（Kotlin / Room / SQLite） + 服务端（Spring Boot / JPA / MySQL）
+-   **安全体系** — BCrypt + Salt 加盐加密、JWT 双 Token 鉴权（Access + Refresh）、无状态认证、全局异常处理
+-   **知识沉淀** — `server_md/` 目录下 4 篇教学文档（超 4000 行），记录从零搭建全过程
+
+---
 
 ## 技术栈
 
-- Kotlin
-- Jetpack Compose
-- Material 3
-- Android ViewModel
-- Kotlin Coroutines
-- Room
-- KSP
+| 层次 | 技术 |
+|------|------|
+| **前端** | Kotlin、Jetpack Compose、Material 3、Room（AI Agent 辅助生成） |
+| **后端** | Java 17、Spring Boot 3.5、Spring Security、Spring Data JPA |
+| **数据库** | MySQL 8 + H2（开发测试） |
+| **鉴权** | JWT（jjwt 0.12）、BCryptPasswordEncoder、Salt 盐值 |
+| **构建** | Gradle（Kotlin DSL）、Gradle Wrapper |
 
-## 开发环境
+---
 
-- Gradle Wrapper `8.7`
-- Android Gradle Plugin `8.5.2`
-- Kotlin `1.9.24`
-- JDK `21`
-- compileSdk / targetSdk `36`
-- minSdk `26`
+## 后端架构
 
-说明：
-
-- Gradle 运行环境使用 JDK 21。
-- 应用字节码编译目标为 Java 17。
-
-## 本地运行
-
-1. 安装 Android Studio，并确保已安装 Android SDK。
-2. 在项目根目录创建 `local.properties`，写入你本机的 SDK 路径：
-
-```properties
-sdk.dir=C:\\Users\\你的用户名\\AppData\\Local\\Android\\Sdk
+```
+请求 → JwtAuthenticationFilter（验签）→ Controller → Service → Repository → MySQL
+                                            ↑                          ↑
+                                     @RestControllerAdvice      JPA 自动建表
+                                       全局异常处理
 ```
 
-3. 使用 Android Studio 打开项目，或在命令行执行：
+### 核心接口
 
-```powershell
-.\gradlew.bat assembleDebug
-```
+| 接口 | 说明 |
+|------|------|
+| `POST /api/auth/register` | 注册（BCrypt + Salt 加密） |
+| `POST /api/auth/login` | 登录（返回 Access + Refresh Token） |
+| `POST /api/auth/refresh` | 刷新 Token |
+| `POST /api/records` | 新增记账记录（需 JWT） |
+| `GET /api/records` | 查询当前用户所有记录 |
+| `GET /api/records/range` | 按时间范围查询 |
+| `PUT /api/records/{id}` | 更新记录 |
+| `DELETE /api/records/{id}` | 删除记录 |
 
-## APK 输出
-
-Debug APK 默认输出到：
-
-```text
-app/build/outputs/apk/debug/app-debug.apk
-```
+---
 
 ## 项目结构
 
-```text
-app/                  Android 应用模块
-app/src/main/         业务代码、界面、资源文件
-app/schemas/          Room schema 导出文件
-gradle/wrapper/       Gradle Wrapper 配置
-build.gradle.kts      根项目构建配置
-settings.gradle.kts   模块声明与仓库配置
-gradlew / gradlew.bat Gradle 启动脚本
+```
+BookkeepingApp/
+├── app/                     # Android 前端（Kotlin + AI Agent 生成）
+│   └── src/main/java/
+│       ├── data/
+│       │   ├── local/       # Room 数据库、DAO
+│       │   ├── model/       # 数据模型
+│       │   └── repository/  # 数据仓库
+│       └── ui/
+│           ├── screens/     # 界面（记账、日历、统计、账户管理）
+│           └── main/        # ViewModel + StateFlow
+│
+├── server/                  # Java Spring Boot 后端（手动搭建）
+│   └── src/main/java/
+│       ├── config/          # SecurityConfig
+│       ├── controller/      # AuthController、RecordController
+│       ├── dto/             # 请求/响应 DTO
+│       ├── entity/          # User、Record（JPA 实体）
+│       ├── repository/      # JPA Repository
+│       ├── security/        # JwtUtil、JwtAuthenticationFilter
+│       ├── service/         # AuthService、RecordService
+│       └── exception/       # 全局异常处理
 ```
 
+---
+
+## 关于开发方式
+
+本项目前端（`app/`）由 **AI Agent 辅助生成代码**，后端（`server/`）由我手动编写。`server_md/` 下的教学文档记录了完整的设计思路和实现步骤，方便他人学习和复现。
+
+---
+
+## 快速开始
+
+### 后端
+
+```bash
+cd server
+../gradlew.bat :server:bootRun
+# 服务启动在 http://localhost:7070
+```
+
+### 前端
+
+```bash
+./gradlew.bat assembleDebug
+# APK 输出：app/build/outputs/apk/debug/app-debug.apk
+```
